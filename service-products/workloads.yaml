@@ -1,0 +1,36 @@
+piVersion: v1
+kind: Service
+metadata:
+  name: service-products
+spec:
+  selector:
+    app: service-products
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      nodePort: 30002
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-products
+spec:
+  selector:
+    matchLabels:
+      app: service-products
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-products
+    spec:
+      containers:
+        - name: server
+          image: gnipaanton/products:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080

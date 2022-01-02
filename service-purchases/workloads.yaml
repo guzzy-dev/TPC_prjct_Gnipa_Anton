@@ -1,0 +1,36 @@
+piVersion: v1
+kind: Service
+metadata:
+  name: service-purchases
+spec:
+  selector:
+    app: service-purchases
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080
+      nodePort: 30001
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-purchases
+spec:
+  selector:
+    matchLabels:
+      app: service-purchases
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: service-purchases
+    spec:
+      containers:
+        - name: server
+          image: gnipaanton/purchases:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
